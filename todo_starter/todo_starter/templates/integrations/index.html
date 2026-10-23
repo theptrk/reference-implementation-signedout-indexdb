@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Integrations · Todo Starter{% endblock %}
+{% block content %}
+<section class="workspace">
+  <p class="eyebrow">A LITTLE MORE CONNECTED</p><h1>Integrations<span class="accent">.</span></h1><p class="lede">Bring a little context to your day.</p>
+  <article class="card integration-card"><div class="workspace-heading"><div><span class="feature-icon">▦</span><h2>Google Calendar</h2></div><span class="pill">{% if connection %}Connected{% else %}Not connected{% endif %}</span></div>
+    <p>See your next 10 events from your primary Google Calendar. Connecting lets Todo Starter read your events, but doesn’t let it change them. Signing in with Google doesn’t connect your calendar; you choose whether to connect it here.</p>
+    {% if connection %}
+      <form method="post" action="{% url 'integrations:disconnect' %}">{% csrf_token %}<button class="button secondary">Disconnect Calendar</button></form>
+      <h3>Coming up</h3><ul class="events">{% for event in events %}<li><strong>{{ event.summary|default:'Untitled event' }}</strong><time>{{ event.start.dateTime|default:event.start.date }}</time></li>{% empty %}<li class="muted">No upcoming events to display.</li>{% endfor %}</ul>
+    {% elif calendar_configured %}
+      <form method="post" action="{% url 'integrations:connect' %}">{% csrf_token %}<button class="button">Connect Google Calendar →</button></form>
+    {% else %}<p class="notice">Google Calendar is not available yet. The person running this app needs to finish setting it up.</p>{% endif %}
+  </article>
+</section>
+{% endblock %}

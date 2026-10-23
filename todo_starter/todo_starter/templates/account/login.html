@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% block title %}Sign in · Todo Starter{% endblock %}
+{% block content %}
+<section class="auth-card card">
+  <p class="eyebrow">WELCOME BACK</p><h1>Your list awaits<span class="accent">.</span></h1>
+  <p class="muted">Sign in to access your saved list on any device and connect Google Calendar. Todos you made in this browser will be added to your account.</p>
+  {% if GOOGLE_CONFIGURED %}<form method="post" action="{% provider_login_url 'google' %}">{% csrf_token %}<button class="button secondary full">Continue with Google</button></form><p class="auth-divider">or use your email</p>{% endif %}
+  <form method="post" action="{% url 'account_login' %}">{% csrf_token %}
+    {{ form.as_p }}{% if redirect_field_value %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />{% endif %}
+    <button type="submit" class="button full">Sign in →</button>
+  </form>
+  <p class="muted">New here? <a href="{% url 'account_signup' %}">Create an account</a></p>
+</section>
+{% endblock %}

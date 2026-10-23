@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">DJANGO COOKIECUTTER REFERENCE IMPLEMENTATION</p>
+    <h1>One todo list.<br /><span>Two ways to save it.</span></h1>
+    <p class="lede">This project demonstrates how the same app works with and without an account.</p>
+    <p><strong>Signed out:</strong> todo data is saved in your browser’s IndexedDB. It is not sent to the server or available on other devices.</p>
+    <p><strong>Signed in:</strong> todo data is saved in the server database under your account. Sign in to the same account on another device to access it.</p>
+    <div class="actions">
+      <a class="button" href="{% url 'todos:app' %}">{% if request.user.is_authenticated %}Open signed-in todo list{% else %}Try the signed-out todo list{% endif %}</a>
+    </div>
+    {% if request.user.is_authenticated %}
+      <p>You are currently signed in. <a href="{% url 'account_logout' %}">Sign out</a> to try browser-only storage.</p>
+    {% else %}
+      <p>You are currently signed out. <a href="{% url 'account_signup' %}">Create an account</a> or <a href="{% url 'account_login' %}">sign in</a> to try server storage.</p>
+    {% endif %}
+  </div>
+  <div class="preview-wrap" aria-label="What happens to existing todos when you sign in">
+    <div class="preview card">
+      <div class="preview-top"><span class="eyebrow">FROM BROWSER STORAGE TO YOUR ACCOUNT</span></div>
+      <h2>What happens when you sign in?</h2>
+      <p>When the signed-in todo list opens:</p>
+      <ol>
+        <li>The app reads any todos you created while signed out from IndexedDB.</li>
+        <li>It adds them to your account in the server database.</li>
+        <li>After the server confirms they were saved, it deletes this app’s IndexedDB database.</li>
+      </ol>
+      <p>This is a one-time move, not ongoing synchronization between IndexedDB and the server.</p>
+      <p>If saving fails, your browser copy is kept so you can retry. Retrying does not create duplicate todos.</p>
+    </div>
+  </div>
+</section>
+<section class="benefits" aria-labelledby="benefits-title">
+  <div class="section-heading">
+    <p class="eyebrow">IMPLEMENTED BEHAVIOR</p>
+    <h2 id="benefits-title">Signed out vs. signed in</h2>
+  </div>
+  <div class="feature-grid">
+    <article class="feature">
+      <h3>Signed out: browser storage</h3>
+      <ul>
+        <li>Add, edit, complete, filter, and delete todos without an account.</li>
+        <li>All todo data is stored in this browser’s IndexedDB. Todo data is not sent to the server.</li>
+        <li>The list remains when you close and reopen the page in the same browser on the same device.</li>
+        <li>Other browsers and devices cannot access it.</li>
+        <li>Clearing this site’s browser data deletes the list.</li>
+      </ul>
+    </article>
+    <article class="feature">
+      <h3>Signed in: server storage</h3>
+      <ul>
+        <li>The same todo features save to the server database under your account.</li>
+        <li>Your todos are available on other devices when you sign in to the same account.</li>
+        <li>Refresh the list to see changes made on another device.</li>
+        <li>Existing signed-out todos are moved from IndexedDB to your account.</li>
+        <li>New signed-in todos are saved to the server, not IndexedDB.</li>
+        <li>Signing out does not copy account todos back to the browser. The signed-out list starts empty.</li>
+      </ul>
+    </article>
+    <article class="feature">
+      <h3>Accounts and Google integration</h3>
+      <ul>
+        <li>Create an account and sign in with email and password, or use Google sign-in.</li>
+        <li>After signing in, open Integrations to connect Google Calendar separately.</li>
+        <li>The integration displays the next 10 events from your primary Google Calendar.</li>
+        <li>Calendar access is read-only. Todos are not synced with Google Calendar.</li>
+        <li>Google sign-in and Calendar require OAuth credentials to be configured by the person running this project.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+{% endblock %}

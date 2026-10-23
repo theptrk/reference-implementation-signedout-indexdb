@@ -1,0 +1,36 @@
+{% load static i18n %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Make a todo list without an account, or sign in to access it on other devices." />
+  <title>{% block title %}Todo Starter{% endblock %}</title>
+  {% block css %}<link rel="stylesheet" href="{% static 'css/project.css' %}" />{% endblock %}
+  {% block javascript %}{% endblock %}
+</head>
+<body>
+{% block body %}
+<header class="site-header">
+  <a class="brand" href="{% url 'home' %}"><span class="brand-icon">✓</span> Todo Starter</a>
+  <nav aria-label="Main navigation">
+    <a href="{% url 'todos:app' %}">My todos</a>
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'integrations:index' %}">Integrations</a>
+      <a href="{% url 'account_logout' %}">Sign out</a>
+    {% else %}
+      <a href="{% url 'account_login' %}">Sign in</a>
+      <a class="button small" href="{% url 'account_signup' %}">Create account <span aria-hidden="true">↗</span></a>
+    {% endif %}
+  </nav>
+</header>
+<main class="container">
+  {% if messages %}<div aria-live="polite">{% for message in messages %}<p class="notice {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+  {% block main %}{% block content %}{% endblock %}{% endblock %}
+</main>
+<footer class="site-footer"><span>Django todo reference implementation</span><a href="{% url 'home' %}">Todo Starter</a></footer>
+{% endblock %}
+{% block modal %}{% endblock %}
+{% block inline_javascript %}{% endblock %}
+</body>
+</html>

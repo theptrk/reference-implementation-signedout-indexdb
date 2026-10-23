@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My todos · Todo Starter{% endblock %}
+{% block javascript %}<script type="module" src="{% static 'js/todos.js' %}"></script>{% endblock %}
+{% block content %}
+<section id="todo-app" class="workspace" data-user="{% if request.user.is_authenticated %}{{ request.user.pk }}{% endif %}">
+  <div class="workspace-heading"><div><h1>My todos<span class="accent">.</span></h1></div>{% if request.user.is_authenticated %}<span class="pill">Signed in</span>{% endif %}</div>
+  {% if request.user.is_authenticated %}
+    <p class="muted">Your todos are saved to your account. Sign in on another device to see this list. <a href="{% url 'integrations:index' %}">Connect Google Calendar →</a></p>
+  {% else %}
+    <aside class="upgrade"><div><strong>You are currently logged out.</strong><p>While logged out, your todos are saved in this browser on this device, provided browser storage is supported. They are not synced to the cloud. Clearing this site’s browser data will delete them.</p><p>Create an account or <a href="{% url 'account_login' %}">sign in</a> to save your existing todos to your account and access them across devices.</p></div><a class="button small" href="{% url 'account_signup' %}">Create an account</a></aside>
+  {% endif %}
+  <div class="card todo-card">
+    <form id="add-todo" class="add-form">{% csrf_token %}<label class="sr-only" for="todo-title">New todo</label><input id="todo-title" placeholder="What's your next small step?" maxlength="300" required autocomplete="off" /><button type="submit" class="button">Add todo <span aria-hidden="true">+</span></button></form>
+    <p id="todo-status" class="status" role="status" aria-live="polite">Loading your list…</p>
+    <div id="todo-filters" class="filters" aria-label="Filter todos"><button data-filter="all" aria-pressed="true">All</button><button data-filter="active" aria-pressed="false">To do</button><button data-filter="done" aria-pressed="false">Completed</button><span id="todo-count" class="muted"></span></div>
+    <ul id="todo-list" class="todo-list"></ul>
+    <p id="todo-empty" class="empty" hidden>A little breathing room.<br /><span class="muted">Add a todo to take your first step.</span></p>
+    <button id="retry" class="button secondary" hidden>Try again</button>
+  </div>
+  {% if request.user.is_authenticated %}<p class="fine">Refresh this page to see changes you made on another device.</p>{% endif %}
+</section>
+{% endblock %}
